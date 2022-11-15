@@ -6,30 +6,28 @@ use std::{
 };
 
 fn main() {
-     let matches = Command::new("magotyp")
-        .version("1.0.0")
-        .author("Irini St")
+     let matches = Command::new("mangotyp")
         .about("From Rust types to Typescript types")
         .arg(
             Arg::new("input")
                 .short('i')
                 .long("input")
                 .required(true)
-                .help("The input Rust file"),
+                .help("the Rust input file"),
         )
         .arg(
             Arg::new("output")
                 .short('o')
                 .long("output")
                 .required(true)
-                .help("The output Typescript file"),
+                .help("the Typescript output file"),
         )
         .get_matches();
 
     let input_filename = matches
         .get_one::<String>("input")
         .expect("input required");
-        
+
     let output_filename = matches
         .get_one::<String>("output")
         .expect("output required");
@@ -47,10 +45,34 @@ fn main() {
 
     input_file
         .read_to_string(&mut input_file_text)
-        .expect("Unable to read file");
+        .expect("Cannot read file");
 
     // This is our tokenized version of Rust file ready to process
     let input_syntax: syn::File = 
         syn::parse_file(&input_file_text).expect("Cannot parse file!");
 
+    // stores the output of the Typescript file 
+    // we will continuously append to as we process the Rust file
+    let mut output_text = String::new();
+
+    for item in input_syntax.items.iter() {
+        match item {
+            // This `Item::Type` enum variant matches our type alias
+            syn::Item::Type(item_type) => {
+                let type_text = parse_item_type(item_type);
+                output_text.push_str(&type_text);
+            }
+            _ => {
+                dbg!("Unimplemented type!");
+            }
+        }
+    }
+
+    let mut output_file = File::create(output_filename).unwrap();
+
+    write!(output_file, "{}", output_text).expect("Cannot write to output file");
+}
+
+fn parse_item_type(item_type: &syn::ItemType) -> String {
+    String::from("to-do")
 }
