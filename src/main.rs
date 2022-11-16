@@ -47,7 +47,11 @@ fn main() {
 }
 
 
-/// Reads the input file of Typescript types
+/// It reads the file into a string, and parses it into a Rust syntax tree
+/// 
+/// Arguments:
+/// 
+/// * `input_filename`: String - This is the name of the file we want to read.
 fn read_input_file(input_filename: String) -> syn::File {
 
     let input_path = Path::new(&input_filename);
@@ -70,14 +74,19 @@ fn read_input_file(input_filename: String) -> syn::File {
 }
 
 
-/// Writes input_syntax as parsed into TS types
-/// to the file of name output_filename
+/// We write to `output_filename` the standard library types of Rust as we translate them into Typescript, 
+/// and then we write to it the result of the parsed Rust file `input_syntax` to TypeScript.
+/// 
+/// Arguments:
+/// 
+/// * `input_syntax`: This is the parsed Rust file that we will be converting to Typescript.
+/// * `output_filename`: The name of the file we want to write to.
 fn write_output_file(input_syntax: syn::File, output_filename: String) {
     // stores the output of the Typescript file 
     // we will continuously append to as we process the Rust file
     let mut output_text = String::new();
 
-    output_text.push_str(&std_types::create_std_types());
+    output_text.push_str(&std_types::translate_std_types());
 
     output_text.push_str(&parse_input_file(input_syntax));
 
@@ -87,8 +96,13 @@ fn write_output_file(input_syntax: syn::File, output_filename: String) {
 }
 
 
-/// Parses the contents of a file of Rust types into
-/// valid Typescript types
+/// Iterates over the items in the file, and match on the type of item to Typescript equivalent type.
+/// 
+/// Arguments:
+/// * `file`: syn::File
+/// 
+/// Returns:  
+/// A string of text with the TypeScript type.
 fn parse_input_file(file: syn::File) -> String {
     let mut output_text = String::new();
 

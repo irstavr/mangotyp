@@ -1,6 +1,10 @@
 /// 
-/// Converts a Rust enum to a Typescript type
-///
+/// It takes a Rust enum and returns an equivalent Typescript type.
+/// 
+/// We iterate over each variant in the enum, 
+/// and for each variant creates a union type with the
+/// variant name as a string literal and the variant's fields as a type
+/// 
 /// ## Examples
 ///
 /// Input:
@@ -15,6 +19,12 @@
 ///   | { test: "Protein"; result: number }
 ///   | { test: "Triglycerids"; result: number }
 ///   | { test: "Fats"; result: number };
+/// 
+/// Arguments:
+/// * `item_enum`: The enum we're parsing
+/// 
+/// Returns: 
+/// A string of text that is the TypeScript representation of the enum
 pub fn parse_enum(item_enum: &syn::ItemEnum) -> String {
     let mut output_text = String::new();
 
@@ -57,12 +67,14 @@ pub fn parse_enum(item_enum: &syn::ItemEnum) -> String {
                 }
                 output_text.push_str("}");
             }
+
             syn::Fields::Unnamed(unnamed_fields) => {
                 // Currently only support a single unnamed field: e.g the i32 in Protein(i32)
                 let unnamed_field = unnamed_fields.unnamed.first().unwrap();
                 let field_type = super::types::parse_type(&unnamed_field.ty);
                 output_text.push_str(&field_type);
             }
+
             syn::Fields::Unit => {
                 output_text.push_str("undefined");
             }

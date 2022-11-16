@@ -1,6 +1,6 @@
 /// 
-/// Converts a Rust item type to a Typescript one
-///
+/// It takes a Rust item type and returns a TypeScript one
+/// 
 /// ## Example:
 /// Input:  type Integer32 = i32;
 /// Output: export type Integer32 = number;
@@ -20,11 +20,20 @@ pub fn parse_token_type(item_type: &syn::ItemType) -> String {
     output_text
 }
 
-/// Converts a Rust type into a Typescript type
+/// It takes a Rust type and returns a Typescript type
 ///
+/// if it's a path, takes the last segment and parse it as an identifier. 
+/// If it's a tuple, parses each element as a type.
+/// 
 /// ## Example:
 /// Input:  (i32, i32) / Option<String>
 /// Output: \[number, number\] / Option<string>;
+/// 
+/// Arguments:
+/// * `syn_type`: The type to parse
+/// 
+/// Returns:
+/// A string representation of the TypeScript type of the field
 pub fn parse_type(syn_type: &syn::Type) -> String {
     let mut output_text = String::new();
 
@@ -89,13 +98,15 @@ pub fn parse_type(syn_type: &syn::Type) -> String {
 
 
 /// 
-/// Convert a Primitive Rust ident to an equivalent TypeScript type name
-/// Translate Primitive types to TypeScript equivalent otherwise
-/// returns the ident untouched
-///
+/// It takes a Primitive Rust ident and returns its equivalent TypeScript type name in a string.
 /// ## Example:
 /// Input:  i32 / Option / bool;
 /// Output: number / Option / boolean;
+/// 
+/// Arguments:
+/// * `ident`: The name of the type we're parsing.
+/// 
+/// Returns: A string slice of the result TypeScript representation
 fn parse_ident(ident: &str) -> &str {
     match ident {
         // All of Rust's many different types of numbers will simply be treated as a number when deserialized in TS;)

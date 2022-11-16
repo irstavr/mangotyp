@@ -1,5 +1,5 @@
 /// 
-/// From a Rust struct to a TypeScript interface
+/// It takes a Rust struct and returns a TypeScript interface
 ///
 /// ## Example:
 ///
@@ -16,6 +16,14 @@
 ///     age: number;
 ///     has_gut_issues: boolean;
 /// }
+/// 
+/// Arguments:
+/// 
+/// * `item_struct`: &syn::ItemStruct
+/// 
+/// Returns:
+/// 
+/// A string of text that is the interface definition
 pub fn parse_struct(item_struct: &syn::ItemStruct) -> String {
     let mut output_text = String::new();
 
