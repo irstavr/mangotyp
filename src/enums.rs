@@ -3,19 +3,19 @@
 ///
 /// ## Examples
 ///
-/// **Input:**
+/// Input:
 /// enum HealthStatus {
 ///     Protein(i32),
 ///     Triglycerids(i32),
 ///     Fats(i32),
 /// }
 ///
-/// **Output:**
+/// Output:
 /// export type HealthStatus =
 ///   | { test: "Protein"; result: number }
 ///   | { test: "Triglycerids"; result: number }
 ///   | { test: "Fats"; result: number };
-pub fn parse_item_enum(item_enum: &syn::ItemEnum) -> String {
+pub fn parse_enum(item_enum: &syn::ItemEnum) -> String {
     let mut output_text = String::new();
 
     output_text.push_str("export type");

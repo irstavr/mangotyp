@@ -67,7 +67,7 @@ fn main() {
                 output_text.push_str(&type_text);
             }
             syn::Item::Enum(item_enum) => {
-                let enum_text = enums::parse_item_enum(item_enum);
+                let enum_text = enums::parse_enum(item_enum);
                 output_text.push_str(&enum_text);
             }
             _ => {
