@@ -1,2 +1,2 @@
 /target
-types.d.ts
+/typedefs/*.d.ts
