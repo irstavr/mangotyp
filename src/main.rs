@@ -117,3 +117,80 @@ fn parse_input_file(file: syn::File) -> String {
     }
     output_text
 }
+
+
+/// 
+/// 
+/// 
+/// 
+/// 
+/// TESTS 
+/// 
+/// 
+/// 
+/// 
+/// 
+
+#[cfg(test)]
+mod tests {
+    // Import the necessary modules
+    use std::{
+        fs::File,
+        io::{Read},
+    };
+    use super::*;
+
+    
+    #[test]
+    fn test_types() {
+        let mut input_file = File::open("./tests/cases/type_test.rs").unwrap();
+
+        let mut input_file_text = String::new();
+
+        input_file.read_to_string(&mut input_file_text).unwrap();
+
+        let input_syntax: syn::File =
+            syn::parse_file(&input_file_text).expect("Cannot parse file");
+
+        let typescript_types = parse_input_file(input_syntax);
+
+        assert_eq!(r#"export type Integer32 = number;"#, &typescript_types);
+    }
+
+    #[test]
+    fn test_struct() {
+        let mut input_file = File::open("./tests/cases/struct_test.rs").unwrap();
+        let mut input_file_text = String::new();
+
+        input_file.read_to_string(&mut input_file_text).unwrap();
+
+        let input_syntax: syn::File =
+            syn::parse_file(&input_file_text).expect("Cannot parse file");
+
+        let typescript_types = parse_input_file(input_syntax);
+
+        assert_eq!(
+            r#"export interface Person {name:string;age:number;has_gut_issues:boolean;};"#,
+            &typescript_types
+        );
+    }
+
+    #[test]
+    fn test_enum() {
+        let mut input_file = File::open("./tests/cases/enum_test.rs").unwrap();
+
+        let mut input_file_text = String::new();
+
+        input_file.read_to_string(&mut input_file_text).unwrap();
+
+        let input_syntax: syn::File =
+            syn::parse_file(&input_file_text).expect("Unable to parse file");
+
+        let typescript_types = parse_input_file(input_syntax);
+
+        assert_eq!(
+            r#"export type HealthStatus =  | { test: "Protein" , result: number} | { test: "Triglycerid" , result: number} | { test: "Fats" , result: number};"#,
+            &typescript_types
+        );
+    }
+}
