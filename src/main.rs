@@ -41,7 +41,16 @@ fn main() {
     dbg!(input_filename);
     dbg!(output_filename);
 
-    let input_path = Path::new(input_filename);
+    let input_syntax: syn::File = read_input_file(input_filename.to_string());
+
+    write_output_file(input_syntax, output_filename.to_string());
+}
+
+
+/// Reads the input file of Typescript types
+fn read_input_file(input_filename: String) -> syn::File {
+
+    let input_path = Path::new(&input_filename);
 
     let mut input_file =
         File::open(input_path).
@@ -57,6 +66,13 @@ fn main() {
     let input_syntax: syn::File = 
         syn::parse_file(&input_file_text).expect("Cannot parse file!");
 
+    input_syntax
+}
+
+
+/// Writes input_syntax as parsed into TS types
+/// to the file of name output_filename
+fn write_output_file(input_syntax: syn::File, output_filename: String) {
     // stores the output of the Typescript file 
     // we will continuously append to as we process the Rust file
     let mut output_text = String::new();
@@ -69,7 +85,6 @@ fn main() {
 
     write!(output_file, "{}", output_text).expect("Cannot write to output file");
 }
-
 
 
 /// Parses the contents of a file of Rust types into
