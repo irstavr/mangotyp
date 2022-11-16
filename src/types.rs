@@ -1,1 +1,1 @@
-type NumberAlias = i32;
+type Integer32 = i32;
