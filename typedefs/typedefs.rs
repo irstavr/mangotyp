@@ -12,3 +12,12 @@ struct Person {
     age: u32,
     has_gut_issues: bool,
 }
+
+type User = Option<Person>;
+
+struct ZoeAnalysis {
+    user: User,
+    list_of_tests: Vec<String>,
+    all_exams: HashMap<String, HealthStatus>,
+}
+

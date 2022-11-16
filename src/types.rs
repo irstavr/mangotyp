@@ -43,6 +43,26 @@ pub fn parse_type(syn_type: &syn::Type) -> String {
             match &segment.arguments {
                 // For simple types with no arguments, e.g. i32 
                 syn::PathArguments::None => {}
+
+                // e.g: HashMap<String, MyObject>
+                syn::PathArguments::AngleBracketed(angle_bracket_args) => {
+                    output_text.push_str("<");
+                    let args = angle_bracket_args.args.iter();
+                    for arg in args {
+                        match arg {
+                            syn::GenericArgument::Type(inner_type) => {
+                                output_text.push_str(&parse_type(inner_type));
+                                output_text.push_str(",");
+                            }
+                            
+                            _ => {
+                                dbg!("Unimplemented token");
+                            }
+                        }
+                    }
+                    output_text.push_str(">");
+                }
+                
                 _ => {
                     dbg!("Unimplemented token!");
                 }

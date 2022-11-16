@@ -1,6 +1,7 @@
 pub mod types;
 pub mod enums;
 pub mod structs;
+pub mod std_types;
 
 
 use clap::{Arg, Command};
@@ -60,7 +61,7 @@ fn main() {
     // we will continuously append to as we process the Rust file
     let mut output_text = String::new();
 
-    
+    output_text.push_str(&std_types::create_std_types());
 
     output_text.push_str(&parse_input_file(input_syntax));
 
