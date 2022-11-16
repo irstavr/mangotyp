@@ -2,9 +2,9 @@
 /// Converts a Rust item type to a Typescript one
 ///
 /// ## Example:
-/// **Input:** type Integer32 = i32;
-/// **Output:** export type Integer32 = number;
-pub fn parse_item_type(item_type: &syn::ItemType) -> String {
+/// Input:  type Integer32 = i32;
+/// Output: export type Integer32 = number;
+pub fn parse_token_type(item_type: &syn::ItemType) -> String {
     let mut output_text = String::new();
 
     output_text.push_str("export type ");
@@ -23,8 +23,8 @@ pub fn parse_item_type(item_type: &syn::ItemType) -> String {
 /// Converts a Rust type into a Typescript type
 ///
 /// ## Example:
-/// **Input:**  (i32, i32) / Option<String>
-/// **Output:** \[number, number\] / Option<string>;
+/// Input:  (i32, i32) / Option<String>
+/// Output: \[number, number\] / Option<string>;
 pub fn parse_type(syn_type: &syn::Type) -> String {
     let mut output_text = String::new();
 
@@ -37,7 +37,7 @@ pub fn parse_type(syn_type: &syn::Type) -> String {
 
             let field_type = segment.ident.to_string();
 
-            let ts_field_type = parse_type_ident(&field_type).to_owned();
+            let ts_field_type = parse_ident(&field_type).to_owned();
             output_text.push_str(&ts_field_type);
 
             match &segment.arguments {
@@ -63,9 +63,9 @@ pub fn parse_type(syn_type: &syn::Type) -> String {
 /// returns the ident untouched
 ///
 /// ## Example:
-/// **Input:** i32 / Option / bool;
-/// **Output:** number / Option / boolean;
-fn parse_type_ident(ident: &str) -> &str {
+/// Input:  i32 / Option / bool;
+/// Output: number / Option / boolean;
+fn parse_ident(ident: &str) -> &str {
     match ident {
         // All of Rust's many different types of numbers will simply be treated as a number when deserialized in TS;)
         "i8" | "i16" | "i32" | "i64" | "i128" | "u8" | "u16" | "u32" 

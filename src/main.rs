@@ -63,7 +63,7 @@ fn main() {
         match item {
             // This `Item::Type` enum variant matches our type alias
             syn::Item::Type(item_type) => {
-                let type_text = types::parse_item_type(item_type);
+                let type_text = types::parse_token_type(item_type);
                 output_text.push_str(&type_text);
             }
             syn::Item::Enum(item_enum) => {
