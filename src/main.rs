@@ -60,29 +60,44 @@ fn main() {
     // we will continuously append to as we process the Rust file
     let mut output_text = String::new();
 
-    for item in input_syntax.items.iter() {
-        match item {
-            // This `Item::Type` enum variant matches our type alias
-            syn::Item::Type(item_type) => {
-                let type_text = types::parse_token_type(item_type);
-                output_text.push_str(&type_text);
-            }
-            syn::Item::Enum(item_enum) => {
-                let enum_text = enums::parse_enum(item_enum);
-                output_text.push_str(&enum_text);
-            }
-            syn::Item::Struct(item_struct) => {
-                let struct_text = structs::parse_struct(item_struct);
-                output_text.push_str(&struct_text);
-            }
-            _ => {
-                dbg!("Unimplemented type!");
-            }
-        }
-    }
+    
+
+    output_text.push_str(&parse_input_file(input_syntax));
 
     let mut output_file = File::create(output_filename).unwrap();
 
     write!(output_file, "{}", output_text).expect("Cannot write to output file");
 }
 
+
+
+/// Parses the contents of a file of Rust types into
+/// valid Typescript types
+fn parse_input_file(file: syn::File) -> String {
+    let mut output_text = String::new();
+
+    for item in file.items.iter() {
+        match item {
+            // This `Item::Type` enum variant matches our type alias
+            syn::Item::Type(item_type) => {
+                let type_text = types::parse_token_type(item_type);
+                output_text.push_str(&type_text);
+            }
+
+            syn::Item::Enum(item_enum) => {
+                let enum_text = enums::parse_enum(item_enum);
+                output_text.push_str(&enum_text);
+            }
+
+            syn::Item::Struct(item_struct) => {
+                let struct_text = structs::parse_struct(item_struct);
+                output_text.push_str(&struct_text);
+            }
+            
+            _ => {
+                dbg!("Unimplemented type!");
+            }
+        }
+    }
+    output_text
+}
