@@ -48,6 +48,17 @@ pub fn parse_type(syn_type: &syn::Type) -> String {
                 }
             }
         }
+
+        // For Tuple types, e.g. [i32, i32]
+        syn::Type::Tuple(type_tuple) => {
+            output_text.push_str("[");
+            for elem in type_tuple.elems.iter() {
+                output_text.push_str(&parse_type(elem));
+                output_text.push_str(",");
+            }
+            output_text.push_str("]");
+        }
+        
         _ => {
             dbg!("Unimplemented token!");
         }
