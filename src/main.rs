@@ -1,5 +1,6 @@
 pub mod types;
 pub mod enums;
+pub mod structs;
 
 
 use clap::{Arg, Command};
@@ -69,6 +70,10 @@ fn main() {
             syn::Item::Enum(item_enum) => {
                 let enum_text = enums::parse_enum(item_enum);
                 output_text.push_str(&enum_text);
+            }
+            syn::Item::Struct(item_struct) => {
+                let struct_text = structs::parse_struct(item_struct);
+                output_text.push_str(&struct_text);
             }
             _ => {
                 dbg!("Unimplemented type!");
