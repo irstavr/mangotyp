@@ -43,7 +43,9 @@ fn main() {
 
     let input_syntax: syn::File = read_input_file(input_filename.to_string());
 
-    write_output_file(input_syntax, output_filename.to_string());
+    let result: String = translate_file(input_syntax);
+
+    write_output_file(result, output_filename.to_string());
 }
 
 
@@ -74,25 +76,23 @@ fn read_input_file(input_filename: String) -> syn::File {
 }
 
 
-/// We write to `output_filename` the standard library types of Rust as we translate them into Typescript, 
-/// and then we write to it the result of the parsed Rust file `input_syntax` to TypeScript.
+/// We append the parsed input file of `input_syntax` to a new string
+/// after we have appended the standard types to the string
 /// 
 /// Arguments:
+/// * `input_syntax`: This is the parsed Rust file that we will be translating.
 /// 
-/// * `input_syntax`: This is the parsed Rust file that we will be converting to Typescript.
-/// * `output_filename`: The name of the file we want to write to.
-fn write_output_file(input_syntax: syn::File, output_filename: String) {
+/// Returns:
+/// A string of the translated Typescript code
+fn translate_file(input_syntax: syn::File) -> String {
     // stores the output of the Typescript file 
     // we will continuously append to as we process the Rust file
     let mut output_text = String::new();
 
     output_text.push_str(&std_types::translate_std_types());
-
     output_text.push_str(&parse_input_file(input_syntax));
 
-    let mut output_file = File::create(output_filename).unwrap();
-
-    write!(output_file, "{}", output_text).expect("Cannot write to output file");
+    output_text
 }
 
 
@@ -132,6 +132,17 @@ fn parse_input_file(file: syn::File) -> String {
     output_text
 }
 
+/// We write to `output_filename` the `result` string we pass
+/// 
+/// Arguments:
+/// 
+/// * `result`: The string to write.
+/// * `output_filename`: The name of the file to write the result to.
+fn write_output_file(result: String, output_filename: String) {
+    let mut output_file = File::create(output_filename).unwrap();
+
+    write!(output_file, "{}", result).expect("Cannot write to output file");
+}
 
 /// 
 /// 
