@@ -1,16 +1,23 @@
 /// 
-/// It takes a Rust item type and returns a TypeScript one
+/// It takes a Rust type alias and returns a TypeScript type alias
 /// 
 /// ## Example:
 /// Input:  type Integer32 = i32;
 /// Output: export type Integer32 = number;
+/// 
+/// Arguments:
+/// * `item_type`: the Rust token to parse
+/// 
+/// Returns:
+/// A string of the type alias in TypeScript
 pub fn parse_token_type(item_type: &syn::ItemType) -> String {
     let mut output_text = String::new();
 
     output_text.push_str("export type ");
 
     // `ident` is the name of the type alias, e.g. `Integer32`
-    output_text.push_str(&item_type.ident.to_string());
+    let ident = &item_type.ident;
+    output_text.push_str(&ident.to_string());
     output_text.push_str(" = ");
 
     let type_string = parse_type(&item_type.ty);
@@ -39,7 +46,7 @@ pub fn parse_type(syn_type: &syn::Type) -> String {
 
     match syn_type {
         // Primitive types like i32 will match Path
-        // We currently do not do anything with full paths
+        // We currently do not do anything with full paths (for example `std:fs:File`)
         // so we take only the last() segment (the type name)
         syn::Type::Path(type_path) => {
             let segment = type_path.path.segments.last().unwrap();

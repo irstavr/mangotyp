@@ -58,7 +58,7 @@ pub fn parse_struct(item_struct: &syn::ItemStruct) -> String {
         // to align with `serde's default handling`
         // the fields named for the numerical index 
         syn::Fields::Unnamed(fields) => {
-            // e.g.:   struct BestStruct (i32, Anything);
+            // e.g.: struct BestStruct (i32, Anything);
             // output: export interface BestStruct { 0: i32, 1: Anything }
             for (index, field) in fields.unnamed.iter().enumerate() {
                 output_text.push_str(&index.to_string());

@@ -77,7 +77,7 @@ fn read_input_file(input_filename: String) -> syn::File {
 
 
 /// We append the parsed input file of `input_syntax` to a new string
-/// after we have appended the standard types to the string
+/// after we have appended the translated standard types to the string
 /// 
 /// Arguments:
 /// * `input_syntax`: This is the parsed Rust file that we will be translating.
@@ -143,6 +143,10 @@ fn write_output_file(result: String, output_filename: String) {
 
     write!(output_file, "{}", result).expect("Cannot write to output file");
 }
+
+
+
+
 
 /// 
 /// 
